@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +5,7 @@ public class ClickManager : MonoBehaviour
 {
     public void OnClick(InputAction.CallbackContext context)
     {
+        Debug.Log("Click detected: " + context.phase);
         if (!context.performed) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
@@ -19,6 +18,7 @@ public class ClickManager : MonoBehaviour
             LineSegment line = hit.collider.GetComponent<LineSegment>();
             if (line != null)
             {
+                Debug.Log("Clicked on line segment at: " + line.transform.position);
                 line.Toggle();
             }
         }

@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
 public class Puzzle : MonoBehaviour
@@ -19,12 +16,6 @@ public class Puzzle : MonoBehaviour
     {
         size = 5;
         createGrid();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void createGrid()
@@ -53,6 +44,6 @@ public class Puzzle : MonoBehaviour
                 Instantiate(gridDot, new Vector3(i + spacing, j + spacing, 0), Quaternion.identity);
             }
         }
-        
+
     }
 }
