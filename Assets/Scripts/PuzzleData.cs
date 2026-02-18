@@ -10,6 +10,7 @@ public class PuzzleData
     public int[][] verticalSolution;
 }
 
+
 [System.Serializable]
 public class PuzzleList
 {
