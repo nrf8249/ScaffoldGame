@@ -14,8 +14,16 @@ public class Puzzle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        size = 5;
-        createGrid();
+        if (GameManager.SelectedPuzzle != null)
+        {
+            size = GameManager.SelectedPuzzle.size; 
+        }
+        else
+        {
+            size = 5; 
+        }
+
+        createGrid(); 
     }
 
     void createGrid()

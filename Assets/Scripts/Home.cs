@@ -1,27 +1,60 @@
-using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Home : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("UI Panels")]
+    public GameObject titlePanel;      
+    public GameObject levelSelectPanel; 
+
+    [Header("Level List Settings")]
+    public GameObject buttonPrefab;
+    public Transform contentParent;
+
     void Start()
     {
+        titlePanel.SetActive(true);       
+        levelSelectPanel.SetActive(false); 
+
         PuzzleList puzzleList;
-        using (StreamReader r = new StreamReader("Assets/Scripts/Puzzles.json"))
+        string path = "Assets/Scripts/Puzzles.json";
+        if (File.Exists(path))
         {
-            string json = r.ReadToEnd();        
-            puzzleList = JsonUtility.FromJson<PuzzleList>(json);
-
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                puzzleList = JsonUtility.FromJson<PuzzleList>(json);
+            }
+            SpawnButtons(puzzleList);
         }
-
-        print("Home start");
-        print(puzzleList.puzzles[0].size);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnStartButtonPressed()
     {
-        
+        titlePanel.SetActive(false);      
+        levelSelectPanel.SetActive(true); 
+    }
+
+    void SpawnButtons(PuzzleList list)
+    {
+        foreach (PuzzleData data in list.puzzles)
+        {
+            GameObject newBtn = Instantiate(buttonPrefab, contentParent);
+            TMP_Text btnText = newBtn.GetComponentInChildren<TMP_Text>();
+            if (btnText != null) btnText.text = "Level " + data.puzzleID;
+
+            Button btn = newBtn.GetComponent<Button>();
+            btn.onClick.AddListener(() => OnLevelClicked(data));
+        }
+    }
+
+    void OnLevelClicked(PuzzleData data)
+    {
+        GameManager.SelectedPuzzle = data;
+        SceneManager.LoadScene("TestPuzzle");
     }
 }
