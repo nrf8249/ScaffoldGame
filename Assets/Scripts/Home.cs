@@ -23,13 +23,11 @@ public class Home : MonoBehaviour
         PuzzleList puzzleList;
         using (StreamReader r = new StreamReader("Assets/Scripts/Puzzles.json"))
         {
-            using (StreamReader r = new StreamReader(path))
-            {
-                string json = r.ReadToEnd();
-                puzzleList = JsonUtility.FromJson<PuzzleList>(json);
-            }
-            SpawnButtons(puzzleList);
+            string json = r.ReadToEnd();
+            puzzleList = JsonUtility.FromJson<PuzzleList>(json);
         }
+        SpawnButtons(puzzleList);
+
     }
 
     public void OnStartButtonPressed()
@@ -37,7 +35,7 @@ public class Home : MonoBehaviour
         titlePanel.SetActive(false);
         levelSelectPanel.SetActive(true);
     }
-
+    
     void SpawnButtons(PuzzleList list)
     {
         foreach (PuzzleData data in list.puzzles)
@@ -46,12 +44,11 @@ public class Home : MonoBehaviour
             TMP_Text btnText = newBtn.GetComponentInChildren<TMP_Text>();
             if (btnText != null) btnText.text = "Level " + data.puzzleID;
 
-                    Button btn = newBtn.GetComponent<Button>();
-                    //btn.onClick.AddListener(() => OnLevelClicked(data));
-                }
-            }
+            Button btn = newBtn.GetComponent<Button>();
+            btn.onClick.AddListener(() => OnLevelClicked(data));
         }
-
+    }
+    
     void OnLevelClicked(PuzzleData data)
     {
         GameManager.SelectedPuzzle = data;
