@@ -8,8 +8,8 @@ using UnityEngine.SceneManagement;
 public class Home : MonoBehaviour
 {
     [Header("UI Panels")]
-    public GameObject titlePanel;      
-    public GameObject levelSelectPanel; 
+    public GameObject titlePanel;
+    public GameObject levelSelectPanel;
 
     [Header("Level List Settings")]
     public GameObject buttonPrefab;
@@ -20,34 +20,32 @@ public class Home : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        titlePanel.SetActive(true);       
-        levelSelectPanel.SetActive(false); 
+        titlePanel.SetActive(true);
+        levelSelectPanel.SetActive(false);
 
         PuzzleList puzzleList;
-        string path = "Assets/Scripts/Puzzles.json";
-        if (File.Exists(path))
+        using (StreamReader r = new StreamReader("Assets/Scripts/Puzzles.json"))
         {
-            string json = r.ReadToEnd();        
-            puzzleList = JsonUtility.FromJson<PuzzleList>(json);
-            string json = r.ReadToEnd();        
+            string json = r.ReadToEnd();
             puzzleList = JsonUtility.FromJson<PuzzleList>(json);
 
+            {
+                foreach (PuzzleData data in puzzleList.puzzles)
+                {
+                    GameObject newBtn = Instantiate(buttonPrefab, contentParent);
+                    TMP_Text btnText = newBtn.GetComponentInChildren<TMP_Text>();
+                    if (btnText != null) btnText.text = "Level " + data.puzzleID;
+
+                    Button btn = newBtn.GetComponent<Button>();
+                    //btn.onClick.AddListener(() => OnLevelClicked(data));
+                }
+            }
         }
-    {
-        foreach (PuzzleData data in list.puzzles)
+
+        // Update is called once per frame
+        void Update()
         {
-            GameObject newBtn = Instantiate(buttonPrefab, contentParent);
-            TMP_Text btnText = newBtn.GetComponentInChildren<TMP_Text>();
-            if (btnText != null) btnText.text = "Level " + data.puzzleID;
 
-            Button btn = newBtn.GetComponent<Button>();
-            btn.onClick.AddListener(() => OnLevelClicked(data));
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
