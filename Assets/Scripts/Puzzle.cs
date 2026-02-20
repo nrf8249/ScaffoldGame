@@ -129,7 +129,7 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-    bool CheckSolution()
+    public bool CheckSolution()
     {
         List<int> horiz = new List<int>();
         List<int> vert = new List<int>();
