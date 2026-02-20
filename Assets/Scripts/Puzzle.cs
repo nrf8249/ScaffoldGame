@@ -129,7 +129,7 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-    public bool CheckSolution()
+    public void  CheckSolution()
     {
         List<int> horiz = new List<int>();
         List<int> vert = new List<int>();
@@ -145,7 +145,11 @@ public class Puzzle : MonoBehaviour
             horiz.Append(lineSegment.isClicked ? 1 : 0);
         }
 
-        return data.checkSolution(horiz, vert);
+
+        if (data.checkSolution(horiz, vert))
+        {
+            Debug.Log("correct!")
+        }
     }
 
     public void BackButton()
