@@ -1,51 +1,63 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Puzzle : MonoBehaviour
 {
     private int size;
     private List<GameObject> horizSegments, vertSegments;
     private int spacing = 1;
-    public List<List<int>> dotClues;
-    public List<List<int>> numberClues;
-    private List<List<int>> horizSolution, vertSolution;
+    public List<int> dotClues;
+    public List<int> numberClues;
+    private List<int> horizSolution, vertSolution;
 
     public GameObject lineSegmentPrefab, gridDotPrefab, whiteDotPrefab, blackDotPrefab, numberCluePrefab;
     public PuzzleData data;
     public Camera mainCam;
+    public GameObject backBtn;
 
     // Start is called before the first frame update
     void Start()
     {
         mainCam = Camera.main;
-
-        
-        //mainCam = FindAnyObjectByType<Camera>();
+        //backBtn = GameObject.Find("BackButton");
+        //Button btn = backBtn.GetComponent<Button>();
+        //TMP_Text btnText = backBtn.GetComponentInChildren<TMP_Text>();
+        //btnText.text = "Back";
+        //btn.onClick.AddListener(() => BackButton());
 
         if (GameManager.SelectedPuzzle != null)
         {
             size = GameManager.SelectedPuzzle.size;
             
-            dotClues = new List<List<int>>();
-            numberClues = new List<List<int>>();
-            horizSolution = new List<List<int>>();
-            vertSolution = new List<List<int>>(); 
+            dotClues = new List<int>();
+            numberClues = new List<int>();
+            horizSolution = new List<int>();
+            vertSolution = new List<int>(); 
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < GameManager.SelectedPuzzle.dotClues.Length; i++)
             {
-                dotClues.Add(new List<int>(GameManager.SelectedPuzzle.dotClues[i]));
-                numberClues.Add(new List<int>(GameManager.SelectedPuzzle.numberClues[i]));
-                horizSolution.Add(new List<int>(GameManager.SelectedPuzzle.horizontalSolution[i]));
-                vertSolution.Add(new List<int>(GameManager.SelectedPuzzle.verticalSolution[i]));
+                dotClues.Add(GameManager.SelectedPuzzle.dotClues[i]);
             }
+            for (int i = 0; i <GameManager.SelectedPuzzle.horizontalSolution.Length; i++)
+            {
+                horizSolution.Add(GameManager.SelectedPuzzle.horizontalSolution[i]);
+                vertSolution.Add(GameManager.SelectedPuzzle.verticalSolution[i]);
+            }
+            for (int i = 0; i < GameManager.SelectedPuzzle.numberClues.Length; i++) 
+            {
+                numberClues.Add(GameManager.SelectedPuzzle.numberClues[i]);
+            }
+
+            if (size > 5) mainCam.orthographicSize = 4;
+            mainCam.transform.position = new Vector3((size + 1)/ 2f, (size + 1)/ 2f, -10);
+            createGrid(data); 
         }
         else
         {
-            size = 5; 
+            return; 
         }
-            
-        mainCam.transform.position = new Vector3(size / 2, size / 2, -10);
-        createGrid(data); 
     }
 
     public void createGrid(PuzzleData data)
@@ -72,39 +84,49 @@ public class Puzzle : MonoBehaviour
             for (int j = 0; j < size; j++)
             {
                 Instantiate(gridDotPrefab, new Vector3(i + spacing, j + spacing, 0), Quaternion.identity);
+                
+                if (dotClues[i * size + j] == 1)
+                {
+                    Instantiate(whiteDotPrefab, new Vector3(j + spacing, i + spacing, 0), Quaternion.identity);
+                }
+                else if (dotClues[i * size + j] == 2)
+                {
+                    Instantiate(blackDotPrefab, new Vector3(j + spacing, i + spacing, 0), Quaternion.identity);
+                }
             }
         }
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < size; j++)
             {
-                if (dotClues[i][j] == 1)
+                if (numberClues[i * size + j] != -1)
                 {
-                    Instantiate(whiteDotPrefab, new Vector3(i + spacing, j + spacing, -1), Quaternion.identity);
-                }
-                else if (dotClues[i][j] == 2)
-                {
-                    Instantiate(blackDotPrefab, new Vector3(i + spacing, j + spacing, -1), Quaternion.identity);
-                }
-            }
-        }
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size - 1; j++)
-            {
-                if (numberClues[i][j] != 0)
-                {
-                    GameObject clue = Instantiate(numberCluePrefab, new Vector3(i + spacing, j + 1 + spacing - .5f, -1), Quaternion.identity);
-                    clue.GetComponentInChildren<TMPro.TMP_Text>().text = numberClues[i][j].ToString();
+                    if (i == 0) //top
+                    {
+                        GameObject clue = Instantiate(numberCluePrefab, new Vector3(j + spacing, size + 0.5f), Quaternion.identity);
+                        clue.GetComponentInChildren<TMPro.TMP_Text>().text = numberClues[i * size + j].ToString();
+                    }
+                    else if (i == 1) //left
+                    {
+                        GameObject clue = Instantiate(numberCluePrefab, new Vector3(0.5f, size - j, 0), Quaternion.identity);
+                        clue.GetComponentInChildren<TMPro.TMP_Text>().text = numberClues[i * size + j].ToString();
+                    }
                 }
             }
         }
     }
 
-    public bool CheckSolution()
+    bool CheckSolution()
     {
-        if (horizSegments.Count != horizSolution.Count * horizSolution[0].Count || vertSegments.Count != vertSolution.Count * vertSolution[0].Count)
+        if (horizSegments.Count != horizSolution.Count * horizSolution[0] || vertSegments.Count != vertSolution.Count * vertSolution[0])
             return false;
         else return true;
+    }
+
+    void BackButton()
+    {
+        Debug.Log("back");
+        GameManager.SelectedPuzzle = null;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
     }
 }
