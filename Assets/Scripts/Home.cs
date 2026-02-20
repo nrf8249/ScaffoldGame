@@ -8,31 +8,38 @@ using UnityEngine.SceneManagement;
 public class Home : MonoBehaviour
 {
     [Header("UI Panels")]
-    public GameObject titlePanel;      
-    public GameObject levelSelectPanel; 
+    public GameObject titlePanel;
+    public GameObject levelSelectPanel;
 
     [Header("Level List Settings")]
     public GameObject buttonPrefab;
     public Transform contentParent;
 
-    public PuzzleList puzzleList;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        titlePanel.SetActive(true);       
-        levelSelectPanel.SetActive(false); 
+        titlePanel.SetActive(true);
+        levelSelectPanel.SetActive(false);
 
         PuzzleList puzzleList;
         string path = "Assets/Scripts/Puzzles.json";
         if (File.Exists(path))
         {
-            string json = r.ReadToEnd();        
-            puzzleList = JsonUtility.FromJson<PuzzleList>(json);
-            string json = r.ReadToEnd();        
-            puzzleList = JsonUtility.FromJson<PuzzleList>(json);
-
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                puzzleList = JsonUtility.FromJson<PuzzleList>(json);
+            }
+            SpawnButtons(puzzleList);
         }
+    }
+
+    public void OnStartButtonPressed()
+    {
+        titlePanel.SetActive(false);
+        levelSelectPanel.SetActive(true);
+    }
+
+    void SpawnButtons(PuzzleList list)
     {
         foreach (PuzzleData data in list.puzzles)
         {
@@ -45,9 +52,9 @@ public class Home : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnLevelClicked(PuzzleData data)
     {
-        
+        GameManager.SelectedPuzzle = data;
+        SceneManager.LoadScene("TestPuzzle");
     }
 }
