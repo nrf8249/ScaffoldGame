@@ -148,7 +148,7 @@ public class Puzzle : MonoBehaviour
 
         if (data.checkSolution(horiz, vert))
         {
-            Debug.Log("correct!")
+            Debug.Log("correct!");
         }
     }
 
