@@ -11,6 +11,11 @@ public class PuzzleData
     public int[] numberClues;
     public int[] horizontalSolution;
     public int[] verticalSolution;
+
+    public bool checkSolution(int [] horizontal, int[] vertical)
+    {
+        return horizontal == this.horizontalSolution && vertical == this.verticalSolution;
+    }
 }
 
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,8 @@ public class Puzzle : MonoBehaviour
     public List<int> dotClues;
     public List<int> numberClues;
     private List<int> horizSolution, vertSolution;
-
+    
+    public List<int> horizStatus, vertStatus;
     public GameObject lineSegmentPrefab, gridDotPrefab, whiteDotPrefab, blackDotPrefab, numberCluePrefab;
     public PuzzleData data;
     public Camera mainCam;
@@ -70,6 +72,12 @@ public class Puzzle : MonoBehaviour
             for (int j = 0; j < size - 1; j++)
             {
                 horizSegments.Add(Instantiate(lineSegmentPrefab, new Vector3(i + spacing, j + 1 + spacing - .5f, 0), Quaternion.identity));
+                horizStatus.Add(0);
+                if (horizSegments.Last().TryGetComponent(out LineSegment lineSegment))
+                {
+                    lineSegment.setInfo(i, j, true);
+                }
+
             }
         }
         for (int i = 0; i < size - 1; i++)
@@ -77,6 +85,11 @@ public class Puzzle : MonoBehaviour
             for (int j = 0; j < size; j++)
             {
                 vertSegments.Add(Instantiate(lineSegmentPrefab, new Vector3(i + 1 + spacing - .5f, j + spacing, 0), Quaternion.Euler(0, 0, 90)));
+                vertStatus.Add(0);
+                if (vertSegments.Last().TryGetComponent(out LineSegment lineSegment))
+                {
+                    lineSegment.setInfo(i, j, false);
+                }
             }
         }
         for (int i = 0; i < size; i++)
