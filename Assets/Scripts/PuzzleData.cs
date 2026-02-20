@@ -7,10 +7,10 @@ public class PuzzleData
     public int puzzleID;
     public int size;
 
-    public int[][] dotClues;
-    public int[][] numberClues;
-    public int[][] horizontalSolution;
-    public int[][] verticalSolution;
+    public int[] dotClues;
+    public int[] numberClues;
+    public int[] horizontalSolution;
+    public int[] verticalSolution;
 }
 
 
