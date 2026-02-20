@@ -9,16 +9,27 @@ public class Puzzle : MonoBehaviour
     private List<GameObject> dots;
 
     public GameObject lineSegmentPrefab, gridDot;
+    public PuzzleData data;
 
+    public Puzzle(int size, List<GameObject> horizSegments, List<GameObject> vertSegments, int spacing, List<GameObject> dots, GameObject lineSegmentPrefab, GameObject gridDot)
+    {
+        this.size = size;
+        this.horizSegments = horizSegments;
+        this.vertSegments = vertSegments;
+        this.spacing = spacing;
+        this.dots = dots;
+        this.lineSegmentPrefab = lineSegmentPrefab;
+        this.gridDot = gridDot;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         size = 5;
-        createGrid();
+        createGrid(data);
     }
 
-    void createGrid()
+    public void createGrid(PuzzleData data)
     {
         horizSegments = new List<GameObject>();
         vertSegments = new List<GameObject>();
@@ -44,6 +55,5 @@ public class Puzzle : MonoBehaviour
                 Instantiate(gridDot, new Vector3(i + spacing, j + spacing, 0), Quaternion.identity);
             }
         }
-
     }
 }
