@@ -21,8 +21,7 @@ public class Home : MonoBehaviour
         levelSelectPanel.SetActive(false);
 
         PuzzleList puzzleList;
-        string path = "Assets/Scripts/Puzzles.json";
-        if (File.Exists(path))
+        using (StreamReader r = new StreamReader("Assets/Scripts/Puzzles.json"))
         {
             using (StreamReader r = new StreamReader(path))
             {
@@ -47,10 +46,11 @@ public class Home : MonoBehaviour
             TMP_Text btnText = newBtn.GetComponentInChildren<TMP_Text>();
             if (btnText != null) btnText.text = "Level " + data.puzzleID;
 
-            Button btn = newBtn.GetComponent<Button>();
-            btn.onClick.AddListener(() => OnLevelClicked(data));
+                    Button btn = newBtn.GetComponent<Button>();
+                    //btn.onClick.AddListener(() => OnLevelClicked(data));
+                }
+            }
         }
-    }
 
     void OnLevelClicked(PuzzleData data)
     {
