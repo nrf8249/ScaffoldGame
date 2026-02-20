@@ -3,6 +3,9 @@ using UnityEngine;
 public class LineSegment : MonoBehaviour
 {
     public bool isClicked = false;
+    private bool isNot = false;
+
+    private int colorIndex = 0;
     private SpriteRenderer spriteRenderer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -15,9 +18,31 @@ public class LineSegment : MonoBehaviour
 
     public void Toggle()
     {
-        isClicked = !isClicked;
+        //isClicked = !isClicked;
         if (spriteRenderer == null) Debug.LogError("SpriteRenderer component not found on LineSegment GameObject.");
 
-        spriteRenderer.color = isClicked ? Color.black : Color.gray; // Change color based on click state
+        colorIndex++;
+        if (colorIndex > 2) { colorIndex = 0; }
+
+        switch (colorIndex)
+        {
+            case 0:
+                spriteRenderer.color = Color.gray6;
+                break;
+            case 1:
+                spriteRenderer.color = Color.black;
+                break;
+            case 2:
+                spriteRenderer.color = Color.red;
+                break;
+        }
+         // Change color based on click state
+    }
+
+    public void ToggleNot()
+    {
+        isNot = !isNot;
+
+        spriteRenderer.color = !isNot ? Color.gray6 : Color.red;
     }
 }

@@ -146,7 +146,7 @@ public class Puzzle : MonoBehaviour
         }
 
 
-        if (data.checkSolution(horiz, vert))
+        if (data.checkSolution(horiz, vert) == true)
         {
             Debug.Log("correct!");
         }
