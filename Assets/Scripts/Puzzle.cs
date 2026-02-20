@@ -23,7 +23,7 @@ public class Puzzle : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        //backBtn = GameObject.Find("BackButton");
+        //backBtn = Ga pmeObject.Find("BackButton");
         //Button btn = backBtn.GetComponent<Button>();
         //TMP_Text btnText = backBtn.GetComponentInChildren<TMP_Text>();
         //btnText.text = "Back";
@@ -148,7 +148,7 @@ public class Puzzle : MonoBehaviour
         return data.checkSolution(horiz, vert);
     }
 
-    void BackButton()
+    public void BackButton()
     {
         Debug.Log("back");
         GameManager.SelectedPuzzle = null;
