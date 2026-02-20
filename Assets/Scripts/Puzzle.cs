@@ -13,7 +13,7 @@ public class Puzzle : MonoBehaviour
     public List<int> numberClues;
     private List<int> horizSolution, vertSolution;
     
-    public List<int> horizStatus, vertStatus;
+    //public List<int> horizStatus, vertStatus;
     public GameObject lineSegmentPrefab, gridDotPrefab, whiteDotPrefab, blackDotPrefab, numberCluePrefab;
     public PuzzleData data;
     public Camera mainCam;
@@ -72,11 +72,11 @@ public class Puzzle : MonoBehaviour
             for (int j = 0; j < size - 1; j++)
             {
                 horizSegments.Add(Instantiate(lineSegmentPrefab, new Vector3(i + spacing, j + 1 + spacing - .5f, 0), Quaternion.identity));
-                horizStatus.Add(0);
-                if (horizSegments.Last().TryGetComponent(out LineSegment lineSegment))
-                {
-                    lineSegment.setInfo(i, j, true);
-                }
+                //horizStatus.Add(0);
+                //if (horizSegments.Last().TryGetComponent(out LineSegment lineSegment))
+                //{
+                //    lineSegment.setInfo(i, j, true);
+                //}
 
             }
         }
@@ -85,11 +85,11 @@ public class Puzzle : MonoBehaviour
             for (int j = 0; j < size; j++)
             {
                 vertSegments.Add(Instantiate(lineSegmentPrefab, new Vector3(i + 1 + spacing - .5f, j + spacing, 0), Quaternion.Euler(0, 0, 90)));
-                vertStatus.Add(0);
-                if (vertSegments.Last().TryGetComponent(out LineSegment lineSegment))
-                {
-                    lineSegment.setInfo(i, j, false);
-                }
+                //vertStatus.Add(0);
+                //if (vertSegments.Last().TryGetComponent(out LineSegment lineSegment))
+                //{
+                //    lineSegment.setInfo(i, j, false);
+                //}
             }
         }
         for (int i = 0; i < size; i++)
@@ -131,9 +131,21 @@ public class Puzzle : MonoBehaviour
 
     bool CheckSolution()
     {
-        if (horizSegments.Count != horizSolution.Count * horizSolution[0] || vertSegments.Count != vertSolution.Count * vertSolution[0])
-            return false;
-        else return true;
+        List<int> horiz = new List<int>();
+        List<int> vert = new List<int>();
+        foreach (GameObject segment in horizSegments)
+        {
+            segment.TryGetComponent(out LineSegment lineSegment);
+            horiz.Append(lineSegment.isClicked ? 1 : 0);
+        }
+
+        foreach (GameObject segment in vertSegments)
+        {
+            segment.TryGetComponent(out LineSegment lineSegment);
+            horiz.Append(lineSegment.isClicked ? 1 : 0);
+        }
+
+        return data.checkSolution(horiz, vert);
     }
 
     void BackButton()
